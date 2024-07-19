@@ -20,3 +20,9 @@
 # Go workspace file
 go.work
 go.work.sum
+
+# Project build
+lenslocked
+
+# Air workspace directory
+tmp/
