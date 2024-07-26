@@ -8,8 +8,14 @@ import (
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+	// Not escaped
+	// bio := `<script>alert("Haha, you have been h4x0r3d!");</script>`
+
+	// Escaped with HTML character entities
+	bio := `&lt;script&gt;alert(&quot;Hi!&quot;);&lt;/script&gt;`
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprintf(w, "<h1>Hello, World!</h1>")
+	fmt.Fprint(w, "<h1>Welcome to my awesome site!</h1><p>User's bio: "+bio+"</p>")
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
