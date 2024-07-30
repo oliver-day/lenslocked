@@ -24,5 +24,8 @@ go.work.sum
 # Project build
 lenslocked
 
+# Air configuration file
+.air.toml
+
 # Air workspace directory
 tmp/
