@@ -3,8 +3,6 @@ package controllers
 import (
 	"html/template"
 	"net/http"
-
-	"github.com/oliver-day/lenslocked/views"
 )
 
 type Static struct {
