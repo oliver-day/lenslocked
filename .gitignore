@@ -24,6 +24,9 @@ go.work.sum
 # Project build
 lenslocked
 
+# Experimental commands build
+cmd/exp/exp
+
 # Air configuration file
 .air.toml
 
