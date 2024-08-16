@@ -1,7 +1,9 @@
 package models
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 
 	"github.com/oliver-day/lenslocked/rand"
@@ -27,6 +29,12 @@ type SessionService struct {
 	BytesPerToken int
 }
 
+func (ss *SessionService) hash(token string) string {
+	tokenHash := sha256.Sum256([]byte(token))
+	// base64 encode the data into a string
+	return base64.URLEncoding.EncodeToString(tokenHash[:])
+}
+
 // Create will create a new session for the user provided. The session token
 // will be returned as the Token field on the Session type, but only the hashed
 // session token is stored in the database.
@@ -39,11 +47,10 @@ func (ss *SessionService) Create(userID int) (*Session, error) {
 	if err != nil {
 		return nil, fmt.Errorf("create: %w", err)
 	}
-	// TODO: Hash the session token
 	session := Session{
-		UserID: userID,
-		Token:  token,
-		// TODO: Set the TokenHash field on the session
+		UserID:    userID,
+		Token:     token,
+		TokenHash: ss.hash(token),
 	}
 	// TODO: Store the session in the database
 	return &session, nil
