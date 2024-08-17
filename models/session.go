@@ -93,3 +93,14 @@ func (ss *SessionService) User(token string) (*User, error) {
 	}
 	return &user, nil
 }
+
+func (ss *SessionService) Delete(token string) error {
+	tokenHash := ss.hash(token)
+	_, err := ss.DB.Exec(`
+		DELETE from sessions
+		WHERE token_hash = $1;`, tokenHash)
+	if err != nil {
+		return fmt.Errorf("delete: %w", err)
+	}
+	return nil
+}
