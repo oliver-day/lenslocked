@@ -8,6 +8,8 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 func Must(t Template, err error) Template {
@@ -29,8 +31,8 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	tpl := template.New(patterns[0])
 	tpl = tpl.Funcs(
 		template.FuncMap{
-			"csrfField": func() template.HTML {
-				return `<input type="hidden" />`
+			"csrfField": func() (template.HTML, error) {
+				return "", fmt.Errorf("csrfField not implemented")
 			},
 		},
 	)
@@ -54,8 +56,8 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 	}
 	tpl = tpl.Funcs(
 		template.FuncMap{
-			"csrfField": func() (template.HTML, error) {
-				return "", fmt.Errorf("csrfField not implemented")
+			"csrfField": func() template.HTML {
+				return csrf.TemplateField(r)
 			},
 		},
 	)
