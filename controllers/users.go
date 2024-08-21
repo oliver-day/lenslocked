@@ -106,6 +106,7 @@ func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/signin", http.StatusFound)
+		return
 	}
 	fmt.Fprintf(w, "Current user: %s\n", user.Email)
 }
