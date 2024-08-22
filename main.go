@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/csrf"
 
 	"github.com/oliver-day/lenslocked/controllers"
+	"github.com/oliver-day/lenslocked/migrations"
 	"github.com/oliver-day/lenslocked/models"
 	"github.com/oliver-day/lenslocked/templates"
 	"github.com/oliver-day/lenslocked/views"
@@ -34,7 +35,7 @@ func main() {
 	defer db.Close()
 
 	// Run goose db migrations
-	err = models.Migrate(db, "migrations")
+	err = models.MigrateFS(db, migrations.FS, ".")
 	if err != nil {
 		panic(err)
 	}
