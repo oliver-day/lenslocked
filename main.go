@@ -33,6 +33,12 @@ func main() {
 	}
 	defer db.Close()
 
+	// Run goose db migrations
+	err = models.Migrate(db, "migrations")
+	if err != nil {
+		panic(err)
+	}
+
 	// Setup model services
 	userService := models.UserService{
 		DB: db,
