@@ -110,6 +110,7 @@ type UserMiddleware struct {
 	SessionService *models.SessionService
 }
 
+// SetUser and RequireUser middleware are required.
 func (umw UserMiddleware) SetUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// First try to read the cookie. If we run into an error reading it,
@@ -143,6 +144,17 @@ func (umw UserMiddleware) SetUser(next http.Handler) http.Handler {
 		r = r.WithContext(ctx)
 		// Finally we call the handler that our middleware was applied to with the
 		// updated request.
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (umw UserMiddleware) RequireUser(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user := context.User(r.Context())
+		if user == nil {
+			http.Redirect(w, r, "/signin", http.StatusFound)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }
