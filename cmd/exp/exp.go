@@ -14,14 +14,6 @@ const (
 )
 
 func main() {
-	email := models.Email{
-		From:      "test@lenslocked.com",
-		To:        "oliver@gmail.com",
-		Subject:   "This is the subject of an email",
-		Plaintext: "This is the body of an email w/ an email service",
-		HTML:      "<h1>Hello there buddy!</h1><p>This is an email from <b>lenslocked</b></p>",
-	}
-
 	es := models.NewEmailService(models.SMTPConfig{
 		Host:     host,
 		Port:     port,
@@ -29,9 +21,10 @@ func main() {
 		Password: password,
 	})
 
-	err := es.Send(email)
+	err := es.ForgotPassword("oliver@sublime.io", "https://lenslocked.com/reset-pw?token=abc123")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println("Email sent")
 }
