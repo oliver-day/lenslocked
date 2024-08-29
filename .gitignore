@@ -32,3 +32,6 @@ cmd/exp/exp
 
 # Air workspace directory
 tmp/
+
+# Environment variables file
+.env
