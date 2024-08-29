@@ -1,9 +1,9 @@
 package main
 
 import (
-	"os"
+	"fmt"
 
-	"github.com/go-mail/mail/v2"
+	"github.com/oliver-day/lenslocked/models"
 )
 
 const (
@@ -14,23 +14,24 @@ const (
 )
 
 func main() {
-	from := "test@lenslocked.com"
-	to := "oliver@gmail.com"
-	subject := "This is the subject of an email"
-	plaintext := "This is the body of an email"
-	html := "<h1>Hello there buddy!</h1><p>This is an email from <b>lenslocked</b></p>"
-	msg := mail.NewMessage()
-	msg.SetHeader("To", to)
-	msg.SetHeader("From", from)
-	msg.SetHeader("Subject", subject)
-	msg.SetBody("text/plain", plaintext)
-	msg.AddAlternative("text/html", html)
-	msg.WriteTo(os.Stdout)
+	email := models.Email{
+		From:      "test@lenslocked.com",
+		To:        "oliver@gmail.com",
+		Subject:   "This is the subject of an email",
+		Plaintext: "This is the body of an email w/ an email service",
+		HTML:      "<h1>Hello there buddy!</h1><p>This is an email from <b>lenslocked</b></p>",
+	}
 
-	dialer := mail.NewDialer(host, port, username, password)
-	err := dialer.DialAndSend(msg)
+	es := models.NewEmailService(models.SMTPConfig{
+		Host:     host,
+		Port:     port,
+		Username: username,
+		Password: password,
+	})
+
+	err := es.Send(email)
 	if err != nil {
 		panic(err)
 	}
-
+	fmt.Println("Email sent")
 }
