@@ -138,7 +138,7 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 		"token": {pwReset.Token},
 	}
 	// TODO: Make the URL here configurable
-	resetURL := "https://www.lenslocked.com/reset-pw?" + vals.Encode()
+	resetURL := "http://localhost:3000/reset-pw?" + vals.Encode()
 
 	err = u.EmailService.ForgotPassword(data.Email, resetURL)
 	if err != nil {
