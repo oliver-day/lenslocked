@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/oliver-day/lenslocked/context"
+	"github.com/oliver-day/lenslocked/errors"
 	"github.com/oliver-day/lenslocked/models"
 )
 
@@ -41,6 +42,9 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 
 	user, err := u.UserService.Create(data.Email, data.Password)
 	if err != nil {
+		if errors.Is(err, models.ErrEmailTaken) {
+			err = errors.Public(err, "That email address is already associated with an account.")
+		}
 		u.Templates.New.Execute(w, r, data, err)
 		return
 	}
