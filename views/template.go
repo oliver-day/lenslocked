@@ -2,6 +2,7 @@ package views
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -13,6 +14,10 @@ import (
 	"github.com/oliver-day/lenslocked/context"
 	"github.com/oliver-day/lenslocked/models"
 )
+
+type public interface {
+	Public() string
+}
 
 func Must(t Template, err error) Template {
 	if err != nil {
@@ -51,6 +56,20 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	return Template{htmlTpl: tpl}, nil
 }
 
+func errMessages(errs ...error) []string {
+	var msgs []string
+	for _, err := range errs {
+		var publicErr public
+		if errors.As(err, &publicErr) {
+			msgs = append(msgs, publicErr.Public())
+		} else {
+			fmt.Println(err)
+			msgs = append(msgs, "Something went wrong.")
+		}
+	}
+	return msgs
+}
+
 type Template struct {
 	htmlTpl *template.Template
 }
@@ -62,6 +81,7 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 		http.Error(w, "There was an error rendering the page.", http.StatusInternalServerError)
 		return
 	}
+	errMsgs := errMessages(errs...)
 	tpl = tpl.Funcs(
 		template.FuncMap{
 			"csrfField": func() template.HTML {
@@ -71,12 +91,7 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 				return context.User(r.Context())
 			},
 			"errors": func() []string {
-				// TODO: Update to a better long-term solution
-				var errMessages []string
-				for _, err := range errs {
-					errMessages = append(errMessages, err.Error())
-				}
-				return errMessages
+				return errMsgs
 			},
 		},
 	)
