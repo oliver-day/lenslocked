@@ -106,6 +106,7 @@ func main() {
 		[]byte(cfg.CSRF.Key),
 		// TODO: Fix this before deploying
 		csrf.Secure(cfg.CSRF.Secure),
+		csrf.Path("/"),
 	)
 
 	// Step 5: Set up controllers
