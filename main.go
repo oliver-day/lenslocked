@@ -162,6 +162,7 @@ func main() {
 		r.Group(func(r chi.Router) {
 			r.Use(umw.RequireUser)
 			r.Get("/new", galleriesC.New)
+			r.Post("/new", galleriesC.Create)
 		})
 	})
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
