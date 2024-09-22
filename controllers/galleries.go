@@ -139,7 +139,7 @@ func (g Galleries) Show(w http.ResponseWriter, r *http.Request) {
 	data.Title = gallery.Title
 	for i := 0; i < 20; i++ {
 		w, h := rand.Intn(500)+200, rand.Intn(500)+200
-		catImageURL := fmt.Sprintf("https://placekitten.com/%d/%d", w, h)
+		catImageURL := fmt.Sprintf("https://placecats.com/%d/%d", w, h)
 		data.Images = append(data.Images, catImageURL)
 	}
 
