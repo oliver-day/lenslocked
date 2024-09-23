@@ -129,6 +129,21 @@ func (g Galleries) Index(w http.ResponseWriter, r *http.Request) {
 	g.Templates.Index.Execute(w, r, data)
 }
 
+func (g Galleries) Delete(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.galleryByID(w, r, userMustOwnGallery)
+	if err != nil {
+		return
+	}
+
+	err = g.GalleryService.Delete(gallery.ID)
+	if err != nil {
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/galleries", http.StatusFound)
+}
+
 // Helper functions --
 
 type galleryOpt func(http.ResponseWriter, *http.Request, *models.Gallery) error
