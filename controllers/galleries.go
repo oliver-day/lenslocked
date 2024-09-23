@@ -54,12 +54,6 @@ func (g Galleries) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := context.User(r.Context())
-	if gallery.UserID != user.ID {
-		http.Error(w, "You are not authorized to edit this gallery", http.StatusForbidden)
-		return
-	}
-
 	var data struct {
 		ID    int
 		Title string
@@ -72,12 +66,6 @@ func (g Galleries) Edit(w http.ResponseWriter, r *http.Request) {
 func (g Galleries) Update(w http.ResponseWriter, r *http.Request) {
 	gallery, err := g.galleryByID(w, r, userMustOwnGallery)
 	if err != nil {
-		return
-	}
-
-	user := context.User(r.Context())
-	if gallery.UserID != user.ID {
-		http.Error(w, "You are not authorized to edi this gallery", http.StatusForbidden)
 		return
 	}
 
