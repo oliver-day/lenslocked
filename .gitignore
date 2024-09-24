@@ -35,3 +35,6 @@ tmp/
 
 # Environment variables file
 .env
+
+# Apps directory for static images
+images/
