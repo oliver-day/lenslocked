@@ -145,7 +145,7 @@ func (service *GalleryService) Images(galleryID int) ([]Image, error) {
 }
 
 func (service *GalleryService) Image(galleryID int, filename string) (Image, error) {
-	imagePath := filepath.Join(service.galleryDir(galleryID))
+	imagePath := filepath.Join(service.galleryDir(galleryID), filename)
 	_, err := os.Stat(imagePath)
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
