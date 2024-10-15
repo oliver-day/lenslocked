@@ -38,3 +38,6 @@ tmp/
 
 # Apps directory for static images
 images/
+
+# NPM packages directory
+node_modules/
