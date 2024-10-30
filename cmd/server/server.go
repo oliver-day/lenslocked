@@ -70,17 +70,23 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	err = run(cfg)
+	if err != nil {
+		panic(err)
+	}
+}
 
+func run(cfg config) error {
 	// Step 2: Set up the database
 	db, err := models.Open(cfg.PSQL)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer db.Close()
 
 	err = models.MigrateFS(db, migrations.FS, ".")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// Step 3: Set up services
@@ -197,8 +203,5 @@ func main() {
 
 	// Step 7: Start the server
 	fmt.Printf("Starting the server on %s...", cfg.Server.Address)
-	err = http.ListenAndServe(cfg.Server.Address, r)
-	if err != nil {
-		panic(err)
-	}
+	return http.ListenAndServe(cfg.Server.Address, r)
 }
