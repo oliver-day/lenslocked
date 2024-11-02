@@ -7,8 +7,18 @@ services:
     volumes:
       - ./images:/app/images
     # This is for testing purposes.
-    # TODO: Remove before deploying.
-    ports:
-      - 3000:3000
+    # TODO: Remove before deploying. -- START
+    # ports:
+    #   - 3000:3000
+    # TODO: Remove before deploying. -- END
     depends_on:
       - db
+
+  caddy:
+    image: caddy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
