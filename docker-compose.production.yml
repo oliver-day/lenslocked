@@ -1,3 +1,11 @@
+x-logging: &highlight-logging
+  driver: fluentd
+  options:
+    fluentd-address: "tls://otel.highlight.io:24284"
+    fluentd-async: "true"
+    fluentd-sub-second-precision: "true"
+    tag: "highlight.project_id=4d7yx5xd"
+
 services:
   server:
     build:
@@ -13,6 +21,7 @@ services:
     # TODO: Remove before deploying. -- END
     depends_on:
       - db
+    logging: *highlight-logging
 
   caddy:
     image: caddy
@@ -23,6 +32,7 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ~/data/lenslocked.com/caddy:/data
+    logging: *highlight-logging
 
   db:
     environment:
@@ -32,3 +42,4 @@ services:
       POSTGRES_DB: ${PSQL_DATABASE}
     volumes:
       - ~/data/lenslocked.com/psql:/var/lib/postgresql/data/pgdata
+    logging: *highlight-logging
