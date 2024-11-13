@@ -215,6 +215,7 @@ func run(cfg config) error {
 	r.Route("/oauth/{provider}", func(r chi.Router) {
 		r.Use(umw.RequireUser)
 		r.Get("/connect", oauthC.Connect)
+		r.Get("/callback", oauthC.Callback)
 	})
 	assetsHandler := http.FileServer(http.Dir("assets"))
 	r.Get("/assets/*", http.StripPrefix("/assets", assetsHandler).ServeHTTP)
