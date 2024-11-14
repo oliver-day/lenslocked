@@ -253,6 +253,27 @@ func (g Galleries) UploadImage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (g Galleries) ImageViaURL(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.galleryByID(w, r, userMustOwnGallery)
+	if err != nil {
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	files := r.PostForm["files"]
+	for _, file := range files {
+		// TODO: Download the files for real
+		fmt.Printf("Downloading %s...\n", file)
+	}
+	editPath := fmt.Sprintf("/galleries/%d/edit", gallery.ID)
+	http.Redirect(w, r, editPath, http.StatusFound)
+}
+
 // Helper functions --
 
 type galleryOpt func(http.ResponseWriter, *http.Request, *models.Gallery) error
