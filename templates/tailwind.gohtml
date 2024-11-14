@@ -67,14 +67,35 @@
 
 <!-- Each page's content goes here. -->
 
-{{define "footer"}}
-<script>
-  function closeAlert(event) {
-    let closeable = event.target.closest(".closeable");
-    closeable.remove();
-    // closeable.classList.add("hidden");
-  }
-</script>
+  {{define "footer"}}
+  <script>
+    function closeAlert(event) {
+      let closeable = event.target.closest(".closeable");
+      closeable.remove();
+      // closeable.classList.add("hidden");
+    }
+  </script>
+  <script
+    type="text/javascript"
+    src="https://www.dropbox.com/static/api/2/dropins.js"
+    id="dropboxjs"
+    data-app-key="ycbv1u8n7yloyou"
+  >
+  </script>
+  <script>
+    let options = {
+        success: function(files) {
+          alert("Here's the file link: " + files[0].link)
+        },
+        linkType: "direct",
+        multiselect: true,
+        extensions: ["images"],
+        folderselect: false,
+      };
+    let button = Dropbox.createChooseButton(options);
+    document.body.appendChild(button);
+  </script>
+
 </body>
 </html>
 {{end}}
