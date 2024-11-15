@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"path/filepath"
 	"strconv"
+	"sync"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/oliver-day/lenslocked/context"
@@ -266,13 +267,17 @@ func (g Galleries) ImageViaURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := r.PostForm["files"]
+	var wg sync.WaitGroup
+	wg.Add(len(files))
 	for _, file := range files {
-		err = g.GalleryService.CreateImageViaURL(gallery.ID, file)
-		if err != nil {
-			http.Error(w, "Something went wrong with an image: "+file, http.StatusInternalServerError)
-			return
-		}
+		imageFile := file
+		go func() {
+			g.GalleryService.CreateImageViaURL(gallery.ID, imageFile)
+			wg.Done()
+		}()
 	}
+	wg.Wait()
+
 	editPath := fmt.Sprintf("/galleries/%d/edit", gallery.ID)
 	http.Redirect(w, r, editPath, http.StatusFound)
 }
